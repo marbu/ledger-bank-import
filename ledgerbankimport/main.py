@@ -27,6 +27,13 @@ from ConfigParser import SafeConfigParser
 from ledgerbankimport.bank import mbank
 
 
+def bank_import(bank_type, inputfile, debug):
+    """
+    Convert input file into ledger and print the result into stdout.
+    """
+    for ledger_entry in bank_type.bank_import(inputfile, debug):
+        print ledger_entry
+
 def main():
     opt_parser = OptionParser(usage="usage: %prog [options] [files]")
     opt_parser.add_option("-d", "--debug",
@@ -34,9 +41,11 @@ def main():
         help="debug mode")
     opts, args = opt_parser.parse_args()
 
+    bank_type = mbank
+
     if len(args) == 0:
-        mbank.bank_import(csvfile=sys.stdin, debug=opts.debug)
+        bank_import(bank_type, sys.stdin, opts.debug)
         return
     for filename in args:
-        with open(filename, "rb") as csvfile:
-            mbank.bank_import(csvfile, debug=opts.debug)
+        with open(filename, "rb") as inputfile:
+            bank_import(bank_type, inputfile, opts.debug)

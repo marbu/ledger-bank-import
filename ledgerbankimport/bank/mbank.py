@@ -112,4 +112,4 @@ def bank_import(csvfile, debug=False):
     for row in reader:
         row = preprocess_row(row, reader, metadata)
         if row is not None:
-            print get_ledger_entry(row, metadata)
+            yield get_ledger_entry(row, metadata)
