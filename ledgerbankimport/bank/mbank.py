@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 # -*- coding: utf8 -*-
 
 """
-ledger-bank-import: converter of csv banking logs into ledger-cli format
+Import module for mBank.cz csv file format.
 """
 
 # Copyright (C) 2014  martin.bukatovic@gmail.com
@@ -21,25 +20,10 @@ ledger-bank-import: converter of csv banking logs into ledger-cli format
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys
 import csv
-from optparse import OptionParser
-from ConfigParser import SafeConfigParser
 
+from ledgerbankimport.bank import unquote
 
-# TODO: polish current mbank template
-# TODO: move import code into dedicated module, add examples and tests
-# TODO: create more import modules (fio, mbank, kb, ...)
-
-
-def unquote(str_value, quotechar='"'):
-    """
-    Remove quotes around given string + stripping.
-    """
-    result = str_value
-    if str_value.startswith(quotechar) and str_value.endswith(quotechar):
-        result = str_value[1:-1].strip()
-    return result
 
 def preprocess_row(row, reader, metadata):
     """
@@ -129,23 +113,3 @@ def bank_import(csvfile, debug=False):
         row = preprocess_row(row, reader, metadata)
         if row is not None:
             print get_ledger_entry(row, metadata)
-
-
-def main():
-    opt_parser = OptionParser(usage="usage: %prog [options] [files]")
-    opt_parser.add_option("-d", "--debug",
-        action="store_true",
-        help="debug mode")
-    opts, args = opt_parser.parse_args()
-
-    # TODO: bank type selection
-
-    if len(args) == 0:
-        bank_import(csvfile=sys.stdin, debug=opts.debug)
-        return
-    for filename in args:
-        with open(filename, "rb") as csvfile:
-            bank_import(csvfile, debug=opts.debug)
-
-if __name__ == '__main__':
-    sys.exit(main())
