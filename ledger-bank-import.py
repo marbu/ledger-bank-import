@@ -80,7 +80,9 @@ def get_ledger_entry(entry, metadata):
     else:
         entry_header = u"{date1}={date2} {desc}"
     # account number
-    if entry["acct"] == "":
+    if entry["acct"] == "" and entry["desc"] == u"VÝBĚR Z BANKOMATU":
+        acct_number = u"    cash"
+    elif entry["acct"] == "":
         acct_number = u"    bank"
     else:
         acct_number = u"    acct:{acct}"
