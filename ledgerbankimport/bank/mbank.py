@@ -66,6 +66,8 @@ def get_ledger_entry(entry, metadata):
     # account number
     if entry["acct"] == "" and entry["desc"] == u"VÝBĚR Z BANKOMATU":
         acct_number = u"    cash"
+    elif entry["acct"] == "" and entry["desc"] == u"PLATBA KARTOU":
+        acct_number = u"    card"
     elif entry["acct"] == "":
         acct_number = u"    bank"
     else:
