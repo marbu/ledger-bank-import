@@ -3,13 +3,14 @@
 what to fix now:
 
  * polish current mbank template
- * move import code into dedicated module, add examples and tests
+ * fix unit test example
  * create more import modules (fio, mbank, kb, ...)
  * add bank type selection
- * unit tests
+ * add more unit tests
 
 long term:
 
+ * make it ledger compatible (so far tested and working with hledger only)
  * proper docs
  * setuptools
  * distro packaging
