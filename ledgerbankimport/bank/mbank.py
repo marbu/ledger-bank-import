@@ -59,6 +59,7 @@ def get_ledger_entry(entry, metadata):
     """
     Create ledger representation for given entry.
     """
+    # check if we have aux. date
     if entry["date1"] == entry["date2"]:
         entry_header = u"{date1} {desc}"
     else:
@@ -72,6 +73,7 @@ def get_ledger_entry(entry, metadata):
         acct_number = u"    bank"
     else:
         acct_number = u"    acct:{acct}"
+    # template of hledger entry
     template_list = [
         entry_header,
         u"    acct:{acct_self}  {amount} CZK = {total} CZK",
@@ -104,9 +106,9 @@ def bank_import(csvfile, debug=False):
         "msg",    # Zpráva pro příjemce
         "name",   # Plátce/Příjemce
         "acct",   # Číslo účtu plátce/příjemce
-        "ks",
-        "vs",
-        "ss",
+        "ks",     # Konstatní symbol
+        "vs",     # Variabilní symbol
+        "ss",     # Specifický sumbol
         "amount", # Částka transakce
         "total",  # Účetní zůstatek po transakci
         ])
