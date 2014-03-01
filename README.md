@@ -2,23 +2,37 @@
 
 This is a simple cli tool to convert csv files with banking transactions into
 [ledger-cli](http://ledger-cli.org/) file format.
+The main goal is to preserve all information from the input file while avoiding
+additional processing as much as possible.
 
-## Similar tools
+Warning: this tools is in a initial development state and as such is likely to
+not work properly on real data.
 
-There are many tools for similar kind of job already:
+## Alternatives
 
- * [hledger's csv import](http://hledger.org/manual#csv-files) (haskell)
+There are many tools concerned with importing data into ledger file format
+already:
+
+ * [hledger's csv import](http://hledger.org/manual#csv-files) (haskell):
    The import feature of hledger looks nice, but it's not flexible enough for
    real banking data.
- * [CSV2Ledger](https://github.com/jwiegley/CSV2Ledger) (perl)
- * [icsv2ledger](https://github.com/quentinsf/icsv2ledger) (python) - interactive
- * [reckon](https://github.com/cantino/reckon) (ruby) - with bayesian labeling
- * [node-ledger-import](https://github.com/slashdotdash/node-ledger-import) (node.js) - inspired by reckon
- * [ledger-autosync](https://bitbucket.org/egh/ledger-autosync) (python)
+ * [CSV2Ledger](https://github.com/jwiegley/CSV2Ledger) (perl):
+   uses yaml rule files to match and label entries
+ * [icsv2ledger](https://github.com/quentinsf/icsv2ledger) (python):
+   interactive convertion
+ * [reckon](https://github.com/cantino/reckon) (ruby):
+   with bayesian labeling
+ * [node-ledger-import](https://github.com/slashdotdash/node-ledger-import) (node.js):
+   inspired by reckon
+ * [ledger-autosync](https://bitbucket.org/egh/ledger-autosync) (python):
+   main focus on synchronization (via ofx)
 
-All the tools (with an exception of hledger) are converting banking entries
-from source (eg. csv file) into ledger file while doing additional conversions
-(eg. via additional rule files, interactive prompt, bayesian labeling ...).
+The main difference between all listed tools (with an exception of hledger) and
+this project is that listed tools are converting banking entries from source
+(eg. csv file) into ledger file while doing additional conversions at the same
+time (eg. via additional rule files, interactive input, bayesian labeling
+...). The resulting ledger file is expected to be directly usable without
+further modification.
 
 ## Goal of this tool (ledger-bank-import)
 
@@ -33,7 +47,7 @@ TODO: example
 
 So far, we have support for:
 
-TODO: supported file formats
+ * mBank.cz csv file
 
 ## Usage
 
