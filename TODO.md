@@ -7,6 +7,7 @@ what to fix now:
  * create more import modules (fio, mbank, kb, ...)
  * add bank type selection
  * add more unit tests
+ * add example input files
 
 long term:
 
