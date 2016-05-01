@@ -1,2 +1,9 @@
 *.py[co]
 *.swp
+*~
+*.egg-info
+.eggs
+.env
+.tox
+build
+dist

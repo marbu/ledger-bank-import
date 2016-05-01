@@ -1,9 +1,8 @@
-#!/usr/bin/env python2
 # -*- coding: utf8 -*-
 
 
 import unittest
-import StringIO
+from io import StringIO
 
 from ledgerbankimport.bank import mbank
 
@@ -18,9 +17,9 @@ class TestBase(unittest.TestCase):
         """
         # so far the only mandatory header: self acct number
         self.acct = "670100-0123456789/6210"
-        header = u"#Číslo účtu:\n{acct};\n\n".format(acct=self.acct)
+        header = "#Číslo účtu:\n{acct};\n\n".format(acct=self.acct)
         # create virtual file from string, encoded in cp1250
-        self.in_file = StringIO.StringIO(header.encode("cp1250"))
+        self.in_file = StringIO(header.encode("cp1250"))
 
     def tearDown(self):
         self.in_file.close()
@@ -35,20 +34,14 @@ class TestBase(unittest.TestCase):
 
     def test_example(self):
         """
-        Example of test.
+        An example of a test.
         """
-        in_entry = (
-            u'15-09-2010;15-09-2010;ODCHOZÍ PLATBA DO MBANK;'
-            u'''"0000000000";"JAN NOVAK";'670100-1111111111/6210';;;;'''
-            u'-3 000,00;22 098,00;')
+        in_entry = '''15-09-2010;15-09-2010;ODCHOZÍ PLATBA DO MBANK;"0000000000";"JAN NOVAK";'670100-1111111111/6210';;;;-3 000,00;22 098,00;'''
         ledger_entry = (
-            u"2010-09-15 ODCHOZÍ PLATBA DO MBANK\n"
-            u"    ; name: JAN NOVAK\n"
-            u"    ; msg: 0000000000\n"
-            u"    acct:{acct}  -3000.00 CZK = 22098.00 CZK\n"
-            u"    acct:670100-1111111111/6210\n\n").format(acct=self.acct)
+            "2010-09-15 ODCHOZÍ PLATBA DO MBANK\n"
+            "    ; name: JAN NOVAK\n"
+            "    ; msg: 0000000000\n"
+            "    acct:{acct}  -3000.00 CZK = 22098.00 CZK\n"
+            "    acct:670100-1111111111/6210\n\n").format(acct=self.acct)
         msg = "simple entry"
         self.assertEntryEqual(in_entry, ledger_entry, msg)
-
-if __name__ == '__main__':
-    unittest.main()

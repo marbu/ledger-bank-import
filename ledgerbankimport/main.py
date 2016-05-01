@@ -22,7 +22,7 @@ ledger-bank-import: converter of csv banking logs into ledger-cli format
 
 import sys
 from optparse import OptionParser
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 
 from ledgerbankimport.bank import mbank
 
@@ -32,7 +32,7 @@ def bank_import(bank_type, inputfile, debug):
     Convert input file into ledger and print the result into stdout.
     """
     for ledger_entry in bank_type.bank_import(inputfile, debug):
-        print ledger_entry
+        print(ledger_entry)
 
 def main():
     opt_parser = OptionParser(usage="usage: %prog [options] [files]")

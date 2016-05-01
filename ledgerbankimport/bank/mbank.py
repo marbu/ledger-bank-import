@@ -22,7 +22,7 @@ Import module for mBank.cz csv file format.
 
 import csv
 
-from ledgerbankimport.bank import unquote
+from ledgerbankimport.bank.common import unquote
 
 
 def preprocess_row(row, reader, metadata):
