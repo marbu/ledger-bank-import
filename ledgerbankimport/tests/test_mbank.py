@@ -1,47 +1,48 @@
 # -*- coding: utf8 -*-
 
+# Copyright (C) 2016 martin.bukatovic@gmail.com
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import unittest
-from io import StringIO
+import textwrap
 
 from ledgerbankimport.bank import mbank
 
 
-# TODO: currently broken, make it work (StopIteration issue)
+class TestCsvFields(unittest.TestCase):
 
-class TestBase(unittest.TestCase):
+    def test_index_uniqueness(self):
+        csv_index_list = sorted(mbank.CSV_FIELDS.values())
+        exp_index_list = list(range(0, len(mbank.CSV_FIELDS)))
+        self.assertEqual(csv_index_list, exp_index_list)
 
-    def setUp(self):
-        """
-        Prepare metadata header for minimal input file.
-        """
-        # so far the only mandatory header: self acct number
-        self.acct = "670100-0123456789/6210"
-        header = "#Číslo účtu:\n{acct};\n\n".format(acct=self.acct)
-        # create virtual file from string, encoded in cp1250
-        self.in_file = StringIO(header.encode("cp1250"))
 
-    def tearDown(self):
-        self.in_file.close()
+class TestDataCleansing(unittest.TestCase):
 
-    def assertEntryEqual(self, in_entry, ledger_entry, msg):
-        """
-        Check convertion of single ledger entry.
-        """
-        self.in_file.write(in_entry.encode("cp1250") + "\n")
-        result_entry = mbank.bank_import(self.in_file).next()
-        self.assertEqual(ledger_entry, result_entry, msg)
+    def test_fix_date(self):
+        self.assertEqual(mbank.fix_date("15-03-2006"), "2006-03-15")
+        self.assertEqual(mbank.fix_date("01-12-2015"), "2015-12-01")
 
-    def test_example(self):
-        """
-        An example of a test.
-        """
-        in_entry = '''15-09-2010;15-09-2010;ODCHOZÍ PLATBA DO MBANK;"0000000000";"JAN NOVAK";'670100-1111111111/6210';;;;-3 000,00;22 098,00;'''
-        ledger_entry = (
-            "2010-09-15 ODCHOZÍ PLATBA DO MBANK\n"
-            "    ; name: JAN NOVAK\n"
-            "    ; msg: 0000000000\n"
-            "    acct:{acct}  -3000.00 CZK = 22098.00 CZK\n"
-            "    acct:670100-1111111111/6210\n\n").format(acct=self.acct)
-        msg = "simple entry"
-        self.assertEntryEqual(in_entry, ledger_entry, msg)
+    def test_fix_money(self):
+        self.assertEqual(mbank.fix_money("-3 000,00"), "-3000.00")
+        self.assertEqual(mbank.fix_money(" 5 000,77"), "5000.77")
+
+
+class TestCreateEntry(unittest.TestCase):
+
+    def test_null(self):
+        # TODO
+        pass
