@@ -1,10 +1,10 @@
 # -*- coding: utf8 -*-
 
 """
-ledger-bank-import: converter of csv banking logs into ledger-cli format
+ledger-bank-import: converter of bank export files into ledger-cli format
 """
 
-# Copyright (C) 2014  martin.bukatovic@gmail.com
+# Copyright (C) 2014 martin.bukatovic@gmail.com
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,21 @@ ledger-bank-import: converter of csv banking logs into ledger-cli format
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys
-from optparse import OptionParser
 from configparser import SafeConfigParser
+import argparse
+import sys
 
 from ledgerbankimport.bank import mbank
 
 
-def bank_import(bank_type, inputfile, debug):
+def get_banktype_module(bank_type):
+    """
+    Import and return module for given bank export file type.
+    """
+    # TODO: actually implement this
+    return mbank
+
+def import_file(bank_type, inputfile, debug):
     """
     Convert input file into ledger and print the result into stdout.
     """
@@ -35,17 +42,34 @@ def bank_import(bank_type, inputfile, debug):
         print(ledger_entry)
 
 def main():
-    opt_parser = OptionParser(usage="usage: %prog [options] [files]")
-    opt_parser.add_option("-d", "--debug",
+    parser = argparse.ArgumentParser(
+        description='convert bank export files into ledger-cli format')
+    parser.add_argument(
+        "-d", "--debug",
         action="store_true",
-        help="debug mode")
-    opts, args = opt_parser.parse_args()
+        help="enable debug mode")
+    parser.add_argument(
+        "-o",
+        action="store",
+        required=False,
+        metavar="FILE",
+        help="filename of output ledger-cli file (stdout used by default)")
+    parser.add_argument(
+        "-t", "--type",
+        action="store",
+        default="mbank",
+        help="type of bank export file")
+    parser.add_argument(
+        "exportfile",
+        nargs='?',
+        help="filename of a bank export file")
+    args = parser.parse_args()
 
-    bank_type = mbank
+    # TODO: error checking
+    bank_type = get_banktype_module(args.type)
 
-    if len(args) == 0:
-        bank_import(bank_type, sys.stdin, opts.debug)
+    if args.exportfile is None:
+        import_file(bank_type, sys.stdin, args.debug)
         return
-    for filename in args:
-        with open(filename, "rb") as inputfile:
-            bank_import(bank_type, inputfile, opts.debug)
+    with open(args.exportfile, "r", encoding=bank_type.ENCODING) as inputfile:
+        import_file(bank_type, inputfile, args.debug)
