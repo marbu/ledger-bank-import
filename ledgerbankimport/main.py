@@ -27,6 +27,10 @@ import sys
 from ledgerbankimport.bank import mbank
 
 
+class BankFormatError(Exception):
+    pass
+
+
 def get_banktype_module(bank_type):
     """
     Import and return module for given bank export file type.
@@ -38,8 +42,8 @@ def import_file(bank_type, inputfile, debug):
     """
     Convert input file into ledger and print the result into stdout.
     """
-    for ledger_entry in bank_type.bank_import(inputfile, debug):
-        print(ledger_entry)
+    for ledger_tr in bank_type.bank_import(inputfile, debug):
+        print(ledger_tr.export())
 
 def main():
     parser = argparse.ArgumentParser(
