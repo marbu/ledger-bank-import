@@ -63,9 +63,13 @@ def create_entry(row, acc_meta):
     """
     Create ledger entry object based on given raw row.
     """
+    print(row, file=sys.stderr)
     date = fix_date(row[CSV_FIELDS['#Datum uskutečnění transakce']])
     desc = row[CSV_FIELDS['#Popis transakce']]
     tr = Transaction(date, desc)
+    amount = fix_money(row[CSV_FIELDS['#Částka transakce']])
+    tr.add_posting(acc_meta['number'], amount, unit=acc_meta['currency'])
+    tr.add_posting('foo')
     # TODO:
     # for colname in (3, 4): row[col] = unquote(row[col])
     return tr

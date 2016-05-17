@@ -44,5 +44,23 @@ class TestDataCleansing(unittest.TestCase):
 class TestCreateEntry(unittest.TestCase):
 
     def test_null(self):
-        # TODO
-        pass
+        # TODO: define what should happen
+        tr = mbank.create_entry(row=[], acc_meta={})
+
+    def test_simple(self):
+        row = [
+            '22-12-2012',
+            '22-12-2012',
+            'ODCHOZÍ PLATBA DO MBANK',
+            '"0000000000"',
+            '"JOE DOE  "',
+            '123456-0123456789/6210',
+            '',
+            '',
+            '',
+            '-42,00',
+            '42 042,42',
+            '',
+            ]
+        acc_meta = {}
+        tr = mbank.create_entry(row, acc_meta)
